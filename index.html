@@ -15,7 +15,14 @@
 		<h1 id="form-title">Create your registration</h1>
 		<p class="intro">Enter your details below to submit your student registration.</p>
 
-		<form name="student-registration" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/success.html" id="registration-form">
+		<div class="registration-success" id="registration-success" hidden role="status" aria-live="polite">
+			<p class="eyebrow">Submission received</p>
+			<h1>Registration submitted</h1>
+			<p class="intro">Thank you. Your registration details have been sent successfully.</p>
+			<a href="/" class="btn btn-primary">Submit another registration</a>
+		</div>
+
+		<form name="student-registration" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/?registered=true" id="registration-form">
 			<input type="hidden" name="form-name" value="student-registration">
 			<p class="visually-hidden">
 				<label>Do not fill this out if you are human: <input name="bot-field"></label>
@@ -71,7 +78,17 @@
 	</section>
 </main>
 <script>
-	document.getElementById('registration-form').addEventListener('submit', function (event) {
+	const form = document.getElementById('registration-form');
+	const success = document.getElementById('registration-success');
+
+	if (new URLSearchParams(window.location.search).has('registered')) {
+		form.hidden = true;
+		document.getElementById('form-title').hidden = true;
+		document.querySelector('.form-card > .intro').hidden = true;
+		success.hidden = false;
+	}
+
+	form.addEventListener('submit', function (event) {
 		const password = document.getElementById('password');
 		const confirm = document.getElementById('confirm');
 		confirm.setCustomValidity(password.value === confirm.value ? '' : 'Passwords must match.');
