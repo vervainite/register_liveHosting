@@ -65,7 +65,7 @@ else {
 ?>
 
         <div class="d-grid mt-4">
-            <a href="index.php" class="btn btn-secondary">Back to Form</a>
+            <a href="register.php" class="btn btn-secondary">Back to Form</a>
         </div>
 
     </div>
