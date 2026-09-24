@@ -27,10 +27,17 @@ $gender = trim((string) ($_POST["gender"] ?? ""));
 $course = trim((string) ($_POST["course"] ?? ""));
 
 $escape = static fn (string $value): string => htmlspecialchars($value, ENT_QUOTES, "UTF-8");
+$validGenders = ["Male", "Female"];
+$validCourses = [
+    "BS Tourism Management",
+    "BS Information Technology",
+    "BS Nursing",
+    "BS Basic Education",
+];
 
 $regex = "/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[A-Za-z0-9]{5,20}$/";
 
-if (!$submitted || $first === "" || $last === "" || !filter_var($email, FILTER_VALIDATE_EMAIL) || $birthday === "" || $gender === "" || $course === "") {
+if (!$submitted || $first === "" || $last === "" || !filter_var($email, FILTER_VALIDATE_EMAIL) || $birthday === "" || !in_array($gender, $validGenders, true) || !in_array($course, $validCourses, true)) {
     echo '<div class="alert alert-danger">Please complete all fields with valid information.</div>';
 }
 elseif (!preg_match($regex, $password)) {
@@ -58,7 +65,7 @@ else {
 ?>
 
         <div class="d-grid mt-4">
-            <a href="register.php" class="btn btn-secondary">Back to Form</a>
+            <a href="index.php" class="btn btn-secondary">Back to Form</a>
         </div>
 
     </div>
