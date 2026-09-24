@@ -16,18 +16,24 @@
     <div class="form-card">
 
 <?php
-$first = $_POST["first"];
-$last = $_POST["last"];
-$email = $_POST["email"];
-$password = $_POST["password"];
-$confirm = $_POST["confirm"];
-$birthday = $_POST["birthday"];
-$gender = $_POST["gender"];
-$course = $_POST["course"];
+$submitted = $_SERVER["REQUEST_METHOD"] === "POST";
+$first = trim((string) ($_POST["first"] ?? ""));
+$last = trim((string) ($_POST["last"] ?? ""));
+$email = trim((string) ($_POST["email"] ?? ""));
+$password = (string) ($_POST["password"] ?? "");
+$confirm = (string) ($_POST["confirm"] ?? "");
+$birthday = trim((string) ($_POST["birthday"] ?? ""));
+$gender = trim((string) ($_POST["gender"] ?? ""));
+$course = trim((string) ($_POST["course"] ?? ""));
+
+$escape = static fn (string $value): string => htmlspecialchars($value, ENT_QUOTES, "UTF-8");
 
 $regex = "/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[A-Za-z0-9]{5,20}$/";
 
-if (!preg_match($regex, $password)) {
+if (!$submitted || $first === "" || $last === "" || !filter_var($email, FILTER_VALIDATE_EMAIL) || $birthday === "" || $gender === "" || $course === "") {
+    echo '<div class="alert alert-danger">Please complete all fields with valid information.</div>';
+}
+elseif (!preg_match($regex, $password)) {
     echo '<div class="alert alert-danger">';
     echo "Password should contain at least one uppercase, one lowercase, one number, no white spaces, minimum of 5 characters, maximum of 20 characters.";
     echo '</div>';
@@ -42,12 +48,12 @@ else {
     echo "<h4>Registration Successful!</h4>";
     echo '</div>';
 
-    echo "First Name: $first<br>";
-    echo "Last Name: $last<br>";
-    echo "Email: $email<br>";
-    echo "Birthday: $birthday<br>";
-    echo "Gender: $gender<br>";
-    echo "Course: $course<br>";
+    echo "First Name: {$escape($first)}<br>";
+    echo "Last Name: {$escape($last)}<br>";
+    echo "Email: {$escape($email)}<br>";
+    echo "Birthday: {$escape($birthday)}<br>";
+    echo "Gender: {$escape($gender)}<br>";
+    echo "Course: {$escape($course)}<br>";
 }
 ?>
 
